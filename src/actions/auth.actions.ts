@@ -1,7 +1,7 @@
 "use server";
 
 import { apiPost, apiGet, ApiError } from "@/lib/api";
-import { setAuthCookies } from "@/lib/auth";
+import { clearAuthCookies, setAuthCookies } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AuthResponse, ActionState } from "@/types";
 
@@ -45,4 +45,34 @@ export async function getMeAction(): Promise<AuthResponse | null> {
     }
     throw error;
   }
+}
+
+export async function registerAction(
+  prevState: ActionState | null,
+  formData: FormData,
+): Promise<ActionState> {
+  const username = formData.get("username") as string;
+  const password = formData.get("password") as string;
+  const phone = formData.get("phone") as string;
+
+  try {
+    const data = await apiPost<AuthResponse>("/auth/register/", {
+      username,
+      password,
+      phone,
+    });
+    await setAuthCookies(data.access, data.refresh, data.user.role);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return { error: error.message };
+    }
+    return { error: "Registration failed. Try a different username." };
+  }
+
+  redirect("/student/dashboard");
+}
+
+export async function logoutAction() {
+  await clearAuthCookies();
+  redirect("/login");
 }

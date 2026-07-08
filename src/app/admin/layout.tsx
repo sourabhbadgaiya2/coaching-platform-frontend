@@ -5,6 +5,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarFooter,
   SidebarMenuButton,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
@@ -16,8 +17,10 @@ import {
   FileText,
   Video,
   ClipboardList,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
+import { logoutAction } from "@/actions/auth.actions";
 
 const navItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -57,6 +60,14 @@ export default function AdminLayout({
             ))}
           </SidebarMenu>
         </SidebarContent>
+        <SidebarFooter>
+          <form action={logoutAction}>
+            <SidebarMenuButton type="submit">
+              <LogOut className="size-4" />
+              <span>Logout</span>
+            </SidebarMenuButton>
+          </form>
+        </SidebarFooter>
       </Sidebar>
 
       <main className="w-full">

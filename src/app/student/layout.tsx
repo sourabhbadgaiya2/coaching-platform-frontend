@@ -4,14 +4,21 @@ import {
   BookOpen,
   CalendarCheck,
   ClipboardList,
+  FileText,
+  Video,
+  Bell,
+  LogOut,
 } from "lucide-react";
+import { logoutAction } from "@/actions/auth.actions";
 
 const navItems = [
   { title: "Dashboard", url: "/student/dashboard", icon: LayoutDashboard },
   { title: "Batches", url: "/student/batches", icon: BookOpen },
-  { title: "Materials", url: "/student/materials", icon: BookOpen },
   { title: "Attendance", url: "/student/attendance", icon: CalendarCheck },
+  { title: "Materials", url: "/student/materials", icon: FileText },
+  { title: "Live Classes", url: "/student/live-classes", icon: Video },
   { title: "Tests", url: "/student/tests", icon: ClipboardList },
+  { title: "Alerts", url: "/student/notifications", icon: Bell },
 ];
 
 export default function StudentLayout({
@@ -21,6 +28,16 @@ export default function StudentLayout({
 }) {
   return (
     <div className="min-h-screen pb-16">
+      <div className="flex justify-end p-3">
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="flex items-center gap-1 text-xs text-muted-foreground"
+          >
+            <LogOut className="size-4" /> Logout
+          </button>
+        </form>
+      </div>
       <main>{children}</main>
 
       {/* Mobile bottom navigation */}

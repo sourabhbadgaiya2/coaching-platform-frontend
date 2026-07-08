@@ -59,3 +59,5 @@ export interface Enrollment {
   is_paid: boolean;
   requested_at: string;
 }
+
+export type AttendanceStatus = "present" | "absent" | "leave";
