@@ -1,7 +1,7 @@
 "use server";
 
 import { apiGet, apiPost, ApiError } from "@/lib/api";
-import { ActionState } from "@/types";
+import { ActionState, PaginatedResponse } from "@/types";
 import { revalidatePath } from "next/cache";
 
 interface Option {
@@ -32,7 +32,10 @@ interface AttemptResult {
 }
 
 export async function getTests(batchId: number): Promise<Test[]> {
-  return apiGet<Test[]>(`/tests/?batch=${batchId}`);
+  const response = await apiGet<PaginatedResponse<Test>>(
+    `/tests/?batch=${batchId}`,
+  );
+  return response.results;
 }
 
 export async function startTest(testId: number) {

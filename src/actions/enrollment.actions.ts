@@ -1,12 +1,15 @@
 "use server";
 
 import { apiPost, apiGet, apiPatch, ApiError } from "@/lib/api";
-import { Enrollment, ActionState } from "@/types";
+import { Enrollment, ActionState, PaginatedResponse } from "@/types";
 import { revalidatePath } from "next/cache";
 
 export async function getEnrollments(status?: string): Promise<Enrollment[]> {
   const query = status ? `?status=${status}` : "";
-  return apiGet<Enrollment[]>(`/enrollments/all/${query}`);
+  const response = await apiGet<PaginatedResponse<Enrollment>>(
+    `/enrollments/all/${query}`,
+  );
+  return response.results;
 }
 
 export async function markPaid(
@@ -49,7 +52,9 @@ export async function rejectEnrollment(
 
 // students actions
 export async function getMyEnrollments(): Promise<Enrollment[]> {
-  return apiGet<Enrollment[]>("/enrollments/my/");
+  const response =
+    await apiGet<PaginatedResponse<Enrollment>>("/enrollments/my/");
+  return response.results;
 }
 
 export async function requestEnrollment(batchId: number): Promise<ActionState> {

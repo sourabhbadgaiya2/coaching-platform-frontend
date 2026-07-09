@@ -1,7 +1,7 @@
 "use server";
 
 import { apiGet, apiPost, ApiError } from "@/lib/api";
-import { ActionState } from "@/types";
+import { ActionState, PaginatedResponse } from "@/types";
 import { revalidatePath } from "next/cache";
 
 interface LiveClass {
@@ -17,7 +17,10 @@ interface LiveClass {
 export async function getUpcomingLiveClasses(
   batchId: number,
 ): Promise<LiveClass[]> {
-  return apiGet<LiveClass[]>(`/live-classes/upcoming/?batch=${batchId}`);
+  const response = await apiGet<PaginatedResponse<LiveClass>>(
+    `/live-classes/upcoming/?batch=${batchId}`,
+  );
+  return response.results;
 }
 
 export async function createLiveClass(

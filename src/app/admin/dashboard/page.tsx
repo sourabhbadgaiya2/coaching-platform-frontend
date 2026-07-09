@@ -2,6 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardSummary } from "@/actions/dashboard.actions";
 import { Users, UserCheck, Clock, Video } from "lucide-react";
 
+// ✅ Enable ISR: Revalidate every 5 minutes for dashboard (more frequent updates)
+export const revalidate = 300;
+
 export default async function AdminDashboard() {
   const summary = await getDashboardSummary();
 

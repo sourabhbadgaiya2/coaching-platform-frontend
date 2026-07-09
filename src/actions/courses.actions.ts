@@ -1,21 +1,41 @@
 "use server";
 
 import { apiGet, apiPost, ApiError } from "@/lib/api";
-import { Course, Batch, Subject, ActionState } from "@/types";
+import {
+  Course,
+  Batch,
+  Subject,
+  ActionState,
+  PaginatedResponse,
+} from "@/types";
 import { revalidatePath } from "next/cache";
 
+// export async function getCourses(): Promise<Course[]> {
+//   return apiGet<Course[]>("/courses/");
+// }
 export async function getCourses(): Promise<Course[]> {
-  return apiGet<Course[]>("/courses/");
+  const response = await apiGet<PaginatedResponse<Course>>("/courses/");
+  return response.results;
 }
-
 export async function getSubjects(): Promise<Subject[]> {
-  return apiGet<Subject[]>("/subjects/");
+  const response = await apiGet<PaginatedResponse<Subject>>("/subjects/");
+  return response.results;
 }
 
 export async function getBatches(courseId?: number): Promise<Batch[]> {
   const query = courseId ? `?course=${courseId}` : "";
-  return apiGet<Batch[]>(`/batches/${query}`);
+  const response = await apiGet<PaginatedResponse<Batch>>(`/batches/${query}`);
+  return response.results;
 }
+
+// export async function getSubjects(): Promise<Subject[]> {
+//   return apiGet<Subject[]>("/subjects/");
+// }
+
+// export async function getBatches(courseId?: number): Promise<Batch[]> {
+//   const query = courseId ? `?course=${courseId}` : "";
+//   return apiGet<Batch[]>(`/batches/${query}`);
+// }
 
 export async function createCourse(
   prevState: ActionState | null,

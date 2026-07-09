@@ -3,7 +3,7 @@
 import { apiGet, ApiError } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { ActionState } from "@/types";
+import { ActionState, PaginatedResponse } from "@/types";
 
 interface Material {
   id: number;
@@ -17,12 +17,16 @@ interface Material {
 }
 
 export async function getMaterials(batchId: number): Promise<Material[]> {
-  return apiGet<Material[]>(`/materials/?batch=${batchId}`);
+  const response = await apiGet<PaginatedResponse<Material>>(
+    `/materials/?batch=${batchId}`,
+  );
+  return response.results;
 }
 
 export async function getAllMaterials(): Promise<Material[]> {
   // Admin sabhi batches ke materials dekhna chahega, isliye batch filter ke bina bhi ek option rakhte hain
-  return apiGet<Material[]>(`/materials/all/`);
+  const response = await apiGet<PaginatedResponse<Material>>(`/materials/all/`);
+  return response.results;
 }
 
 export async function uploadMaterial(

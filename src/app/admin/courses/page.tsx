@@ -12,6 +12,9 @@ import {
 import { CreateCourseDialog } from "./create-course-dialog";
 import { CreateBatchDialog } from "./create-batch-dialog";
 
+// ✅ Enable ISR: Revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600;
+
 export default async function CoursesPage() {
   const [courses, batches] = await Promise.all([getCourses(), getBatches()]);
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { apiGet, apiPost, ApiError } from "@/lib/api";
-import { ActionState } from "@/types";
+import { ActionState, PaginatedResponse } from "@/types";
 import { revalidatePath } from "next/cache";
 
 type Status = "present" | "absent" | "leave";
@@ -39,19 +39,27 @@ export async function getMyAttendanceSummary(
 export async function getMyAttendanceHistory(
   batchId: number,
 ): Promise<AttendanceRecord[]> {
-  return apiGet<AttendanceRecord[]>(`/attendance/my/?batch=${batchId}`);
+  const response = await apiGet<PaginatedResponse<AttendanceRecord>>(
+    `/attendance/my/?batch=${batchId}`,
+  );
+  return response.results;
 }
 
 export async function getEnrolledStudents(
   batchId: number,
 ): Promise<StudentInBatch[]> {
   // enrollment list se active students nikaal rahe hain
-  const enrollments = await apiGet<
-    { student: number; student_name: string; status: string }[]
+  const response = await apiGet<
+    PaginatedResponse<{
+      student: number;
+      student_name: string;
+      status: string;
+      batch: number;
+    }>
   >(`/enrollments/all/?status=active`);
-  return enrollments
-    .filter((e: any) => e.batch === batchId)
-    .map((e: any) => ({
+  return response.results
+    .filter((e) => e.batch === batchId)
+    .map((e) => ({
       id: e.student,
       username: e.student_name,
       first_name: "",
@@ -82,8 +90,8 @@ export async function getAttendanceForDate(
   batchId: number,
   date: string,
 ): Promise<Record<number, Status>> {
-  const records = await apiGet<{ student: number; status: Status }[]>(
-    `/attendance/?batch=${batchId}&date=${date}`,
-  );
-  return Object.fromEntries(records.map((r) => [r.student, r.status]));
+  const response = await apiGet<
+    PaginatedResponse<{ student: number; status: Status }>
+  >(`/attendance/?batch=${batchId}&date=${date}`);
+  return Object.fromEntries(response.results.map((r) => [r.student, r.status]));
 }

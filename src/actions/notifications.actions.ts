@@ -1,6 +1,7 @@
 "use server";
 
 import { apiGet } from "@/lib/api";
+import { PaginatedResponse } from "@/types";
 
 interface Notification {
   id: number;
@@ -10,5 +11,7 @@ interface Notification {
 }
 
 export async function getMyNotifications(): Promise<Notification[]> {
-  return apiGet<Notification[]>("/notifications/my/");
+  const response =
+    await apiGet<PaginatedResponse<Notification>>("/notifications/my/");
+  return response.results;
 }
