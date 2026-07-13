@@ -6,6 +6,7 @@ import Link from "next/link";
 
 export default async function StudentDashboard() {
   const enrollments = await getMyEnrollments();
+
   const activeEnrollments = enrollments.filter((e) => e.status === "active");
 
   const attendanceData = await Promise.all(

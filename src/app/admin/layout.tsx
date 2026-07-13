@@ -18,6 +18,7 @@ import {
   Video,
   ClipboardList,
   LogOut,
+  HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { logoutAction } from "@/actions/auth.actions";
@@ -30,6 +31,7 @@ const navItems = [
   { title: "Materials", url: "/admin/materials", icon: FileText },
   { title: "Live Classes", url: "/admin/live-classes", icon: Video },
   { title: "Tests", url: "/admin/tests", icon: ClipboardList },
+  { title: "Help", url: "/admin/help", icon: HelpCircle },
 ];
 
 export default function AdminLayout({
