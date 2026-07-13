@@ -10,7 +10,6 @@ export function middleware(request: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isStudentRoute = pathname.startsWith("/student");
 
-  // Login/Register pe already logged-in user na ja sake
   if (isAuthRoute && token) {
     return NextResponse.redirect(
       new URL(
@@ -20,9 +19,8 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // Protected routes pe bina login ke access na ho
   if ((isAdminRoute || isStudentRoute) && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Role mismatch check — student admin route access na kare, aur vice versa

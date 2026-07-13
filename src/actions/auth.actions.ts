@@ -74,5 +74,5 @@ export async function registerAction(
 
 export async function logoutAction() {
   await clearAuthCookies();
-  redirect("/login");
+  redirect("/");
 }

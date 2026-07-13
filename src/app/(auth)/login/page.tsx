@@ -2,6 +2,8 @@
 
 import { useActionState } from "react";
 import { loginAction } from "@/actions/auth.actions";
+import { SubmitButton } from "@/components/submit-button";
+import Link from "next/dist/client/link";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
@@ -33,13 +35,16 @@ export default function LoginPage() {
           required
         />
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full bg-black text-white rounded p-2 disabled:opacity-50"
-        >
-          {isPending ? "Logging in..." : "Login"}
-        </button>
+        <SubmitButton isPending={isPending} loadingText="Logging in...">
+          Login
+        </SubmitButton>
+
+        <p className="text-sm text-center text-muted-foreground">
+          Don't have an account?{" "}
+          <Link href="/register" className="text-primary underline">
+            Register
+          </Link>
+        </p>
       </form>
     </div>
   );

@@ -24,6 +24,8 @@ import {
 import Link from "next/link";
 import { logoutAction } from "@/actions/auth.actions";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsMenu } from "@/components/settings-menu";
 
 const navItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -59,12 +61,17 @@ export default function AdminLayout({
               const isActive = pathname.startsWith(item.url);
               return (
                 <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton isActive={isActive}>
+                  <SidebarMenuButton
+                    className={isActive ? "text-primary!" : ""}
+                    isActive={isActive}
+                  >
                     <Link
                       href={item.url}
                       className="flex items-center gap-2 w-full"
                     >
-                      <item.icon className="size-4" />
+                      <item.icon
+                        className={`size-4 ${isActive ? "text-primary" : ""}`}
+                      />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -73,18 +80,13 @@ export default function AdminLayout({
             })}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
-          <form action={logoutAction}>
-            <SidebarMenuButton type="submit">
-              <LogOut className="size-4" />
-              <span>Logout</span>
-            </SidebarMenuButton>
-          </form>
+        <SidebarFooter className="p-2">
+          <SettingsMenu />
         </SidebarFooter>
       </Sidebar>
 
       <main className="w-full">
-        <div className="p-4 border-b">
+        <div className="flex items-center justify-between border-b p-4 md:hidden">
           <SidebarTrigger />
         </div>
         <div className="p-6">{children}</div>

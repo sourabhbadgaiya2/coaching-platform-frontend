@@ -1,6 +1,7 @@
 import { Fraunces, Work_Sans, IBM_Plex_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export default function RootLayout({
       className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}
     >
       <body>
-        <TooltipProvider>{children}</TooltipProvider>
+        <Providers>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Providers>
       </body>
     </html>
   );
