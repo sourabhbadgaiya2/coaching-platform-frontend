@@ -1,3 +1,4 @@
+"use client";
 import {
   SidebarProvider,
   Sidebar,
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { logoutAction } from "@/actions/auth.actions";
+import { usePathname } from "next/navigation";
 
 const navItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -39,27 +41,36 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   return (
     <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader className="p-4 font-semibold text-lg">
-          Coaching Admin
+      <Sidebar collapsible="icon">
+        <SidebarHeader className="p-4 font-semibold text-lg group-data-[collapsible=icon]:p-2 flex  justify-center group-data-[collapsible=icon]:justify-center">
+          <span className="group-data-[collapsible=icon]:hidden">
+            Coaching Admin
+          </span>
+          <span className="hidden group-data-[collapsible=icon]:flex items-center justify-center size-8 rounded-lg bg-primary text-primary-foreground text-sm font-bold">
+            CA
+          </span>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="flex-1 p-2">
           <SidebarMenu>
-            {navItems.map((item) => (
-              <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton>
-                  <Link
-                    href={item.url}
-                    className="flex items-center gap-2 w-full"
-                  >
-                    <item.icon className="size-4" />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname.startsWith(item.url);
+              return (
+                <SidebarMenuItem key={item.url}>
+                  <SidebarMenuButton isActive={isActive}>
+                    <Link
+                      href={item.url}
+                      className="flex items-center gap-2 w-full"
+                    >
+                      <item.icon className="size-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
