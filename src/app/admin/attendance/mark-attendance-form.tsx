@@ -36,7 +36,7 @@ export function MarkAttendanceForm({
     FormData
   >(bulkMarkAttendance, null);
 
-  // Jab bhi date/batch change ho, existing attendance fetch karke prefill karo
+  // When the date or batch changes, fetch existing attendance and prefill
   useEffect(() => {
     getAttendanceForDate(batchId, date).then((existing) => {
       setStatuses((prev) => {

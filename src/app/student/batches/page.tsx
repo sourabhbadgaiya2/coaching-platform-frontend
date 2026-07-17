@@ -10,8 +10,6 @@ export default async function BatchesPage() {
     getMyEnrollments(),
   ]);
 
-  const enrolledBatchIds = new Set(myEnrollments.map((e) => e.batch));
-
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-bold">Available Batches</h1>

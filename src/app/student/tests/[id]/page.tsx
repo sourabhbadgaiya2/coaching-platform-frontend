@@ -11,13 +11,13 @@ export default async function TestAttemptPage({
   const { id } = await params;
   const testId = Number(id);
 
-  // Pehle check karo already attempt kiya hua hai ya nahi
+  // First check whether the test has already been attempted
   const existingResult = await getTestResult(testId);
   if (existingResult) {
     return <ResultView result={existingResult} />;
   }
 
-  // Test details fetch karo — student ke sabhi enrollments se dhoondo
+  // Fetch test details by finding them from all the student's enrollments
   const enrollments = await getMyEnrollments();
   let test = null;
   for (const enrollment of enrollments.filter((e) => e.status === "active")) {

@@ -24,7 +24,7 @@ export async function getMaterials(batchId: number): Promise<Material[]> {
 }
 
 export async function getAllMaterials(): Promise<Material[]> {
-  // Admin sabhi batches ke materials dekhna chahega, isliye batch filter ke bina bhi ek option rakhte hain
+  // Admin may want to view materials across all batches, so keep an endpoint without a batch filter
   const response = await apiGet<PaginatedResponse<Material>>(`/materials/all/`);
   return response.results;
 }
@@ -48,7 +48,7 @@ export async function uploadMaterial(
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: formData, // FormData directly bhej rahe hain — file upload ke liye JSON nahi, multipart chahiye
+      body: formData, // Send FormData directly — file upload requires multipart, not JSON
     });
 
     if (!res.ok) {
