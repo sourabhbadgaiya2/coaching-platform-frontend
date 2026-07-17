@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Coaching Platform — Frontend
 
-## Getting Started
+A mobile-first Progressive Web App for a coaching classes platform, built with Next.js. Two experiences in one app: a desktop-oriented Admin panel and a mobile-first Student experience.
 
-First, run the development server:
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, Server Actions)
+- **UI:** Tailwind CSS + shadcn/ui
+- **3D:** Three.js (landing page hero)
+- **PWA:** next-pwa (installable, "Add to Home Screen")
+- **Deployment:** Docker → Azure App Service
+- **CI/CD:** GitHub Actions — automated build + deploy on push to `main`
+
+## Features
+
+**Admin (desktop-oriented, sidebar layout)**
+- Course & batch management
+- Enrollment approval and offline payment recording
+- Bulk attendance marking with per-date prefill
+- Material uploads, live class scheduling
+- Test creation with nested questions/options
+- Dashboard with live business stats
+- In-app help/documentation section
+
+**Student (mobile-first, bottom nav)**
+- Batch browsing and enrollment requests
+- Materials, live class links, attendance history
+- Test-taking with auto-scored results
+- Notifications
+
+## Architecture Notes
+
+- Auth is handled entirely through Next.js Server Actions — JWT tokens are stored in `httpOnly` cookies (never exposed to client-side JS), and API calls to the Django backend happen server-side, so the backend URL is never exposed to the browser.
+- A shared `apiGet` / `apiPost` / `apiPatch` / `apiDelete` wrapper (`lib/api.ts`) standardizes error handling and auth-header injection across all API calls.
+- Middleware enforces both authentication and role-based route protection — a student cannot reach `/admin/*` routes and vice versa.
+- Student-facing pages are deliberately mobile-first (bottom navigation, single-column cards) since students primarily access the platform on their phones.
+
+## Local Setup
 
 ```bash
+npm install
+cp .env.local.example .env.local   # set API_URL to your backend
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Building for Production (PWA testing)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+PWA support is disabled in dev mode. To test installability:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build --webpack
+npm run start
+```
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Runs as a Docker container (Next.js standalone output) on Azure App Service. Every push to `main` triggers an automated build and deploy via GitHub Actions.
